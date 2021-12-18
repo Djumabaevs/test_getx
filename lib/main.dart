@@ -1,40 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: 'Dialog Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: Home(),
-      debugShowCheckedModeBanner: false,
-    );
+Stream<int> boatStream() async* {
+  for (int i = 1; i <= 10; i++) {
+    print("SENT boat no. " + i.toString());
+    await Future.delayed(Duration(seconds: 2));
+    yield i;
   }
 }
 
-class Home extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('GeeksforGeeks Dialog'),
-        centerTitle: true,
-        backgroundColor: Colors.green,
-      ),
-      body: Center(
-          child: ElevatedButton(
-        child: Text('Show Dialog'),
-        onPressed: () {
-          Get.defaultDialog();
-        },
-      )),
-    );
-  }
+void main(List<String> args) async {
+  Stream<int> stream = boatStream();
+
+  stream.listen((receiveData) {
+    print("RECEIVED boat no. " + receiveData.toString());
+  });
 }
