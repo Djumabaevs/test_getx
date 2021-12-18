@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:test_getx/second_approach/main-cubit.dart';
-import 'package:test_getx/third_approach/cubit/counter_cubit.dart';
+
+import 'cubit/counter_cubit.dart';
 
 void main() {
   runApp(MyApp());
@@ -10,49 +10,49 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: BlocProvider<CounterCubit>(
-        create: (context) => CounterCubit(),
-        child: MyHomepage(title: 'Flutter Demo Home Page'),
+    return BlocProvider<CounterCubit>(
+      create: (context) => CounterCubit(),
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: MyHomePage(title: 'Flutter Demo Home Page'),
       ),
     );
   }
 }
 
-class MyHomepage extends StatefulWidget {
-  MyHomepage({Key? key, this.title}) : super(key: key);
+class MyHomePage extends StatefulWidget {
+  MyHomePage({Key key, this.title}) : super(key: key);
 
-  final String? title;
+  final String title;
 
   @override
-  _MyHomepageState createState() => _MyHomepageState();
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomepageState extends State<MyHomepage> {
+class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title!),
+        title: Text(widget.title),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'You have pushed the button these many times:',
+              'You have pushed the button this many times:',
             ),
             BlocConsumer<CounterCubit, CounterState>(
               listener: (context, state) {
                 if (state.wasIncremented == true) {
                   Scaffold.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Incremented'),
+                      content: Text('Incremented!'),
                       duration: Duration(milliseconds: 300),
                     ),
                   );
@@ -68,7 +68,7 @@ class _MyHomepageState extends State<MyHomepage> {
               builder: (context, state) {
                 if (state.counterValue < 0) {
                   return Text(
-                    'Brr, Negative' + state.counterValue.toString(),
+                    'BRR, NEGATIVE ' + state.counterValue.toString(),
                     style: Theme.of(context).textTheme.headline4,
                   );
                 } else if (state.counterValue % 2 == 0) {
@@ -95,7 +95,6 @@ class _MyHomepageState extends State<MyHomepage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 FloatingActionButton(
-                  heroTag: Text('${widget.title} #1'),
                   onPressed: () {
                     BlocProvider.of<CounterCubit>(context).decrement();
                     // context.bloc<CounterCubit>().decrement();
@@ -104,16 +103,15 @@ class _MyHomepageState extends State<MyHomepage> {
                   child: Icon(Icons.remove),
                 ),
                 FloatingActionButton(
-                  heroTag: Text('${widget.title} #2'),
                   onPressed: () {
-                    BlocProvider.of<CounterCubit>(context).increment();
-                    //context.bloc<CounterCubit>().increment();
+                    // BlocProvider.of<CounterCubit>(context).increment();
+                    context.bloc<CounterCubit>().increment();
                   },
                   tooltip: 'Increment',
                   child: Icon(Icons.add),
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),
